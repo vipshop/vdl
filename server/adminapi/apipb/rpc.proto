@@ -1,0 +1,340 @@
+syntax = "proto3";
+package apipb;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+
+
+service Membership {
+    // MemberAdd adds a member into the cluster.
+    rpc MemberAdd(MemberAddRequest) returns (MemberAddResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/membership/member/add"
+        body: "*"
+    };
+    }
+
+    // MemberRemove removes an existing member from the cluster.
+    rpc MemberRemove(MemberRemoveRequest) returns (MemberRemoveResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/membership/member/remove"
+        body: "*"
+    };
+    }
+
+    // MemberUpdate updates the member configuration.
+    rpc MemberUpdate(MemberUpdateRequest) returns (MemberUpdateResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/membership/member/update"
+        body: "*"
+    };
+    }
+
+    // MemberList lists all the members in the cluster.
+    rpc MemberList(MemberListRequest) returns (MemberListResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/membership/member/list"
+        body: "*"
+    };
+    }
+}
+
+service LogStreamAdmin {
+    // Start a log stream.
+    rpc LogStreamStart(LogStreamStartRequest) returns (LogStreamStartResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/logstream/start"
+        body: "*"
+    };
+    }
+
+    // Stop a log stream.
+    rpc LogStreamStop(LogStreamStopRequest) returns (LogStreamStopResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/logstream/stop"
+        body: "*"
+    };
+    }
+
+    // Delete a log stream.
+    rpc LogStreamDelete(LogStreamDeleteRequest) returns (LogStreamDeleteResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/logstream/delete"
+        body: "*"
+    };
+    }
+
+    // Delete segment file in log stream.
+    rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/logstream/delete_file"
+        body: "*"
+    };
+    }
+
+    //get delete segment file permission
+    rpc GetDeletePermission(GetDeletePermissionReq) returns (GetDeletePermissionResp) {
+        option (google.api.http) = {
+            post: "/vdlserver/logstream/get_delete_permission"
+            body: "*"
+    };
+    }
+
+    //set delete segment file permission
+    rpc SetDeletePermission(SetDeletePermissionReq) returns (SetDeletePermissionResp) {
+        option (google.api.http) = {
+             post: "/vdlserver/logstream/set_delete_permission"
+             body: "*"
+    };
+    }
+
+    //leade tranfser
+    rpc LeaderTransfer(LogStreamLeaderTransferRequeset) returns (LogStreamLeaderTransferResponse) {
+        option (google.api.http) = {
+             post: "/vdlserver/logstream/leader_tranfser"
+             body: "*"
+    };
+    }
+
+}
+
+service RateAdmin {
+    rpc ListRateInfo(RateListRequest) returns (RateListResponse) {
+        option (google.api.http) = {
+            post: "/vdlserver/rate/list"
+            body: "*"
+        };
+    }
+
+    rpc UpdateRateInfo(RateUpdateRequest) returns (RateUpdateResponse) {
+        option (google.api.http) = {
+            post: "/vdlserver/rate/update"
+            body: "*"
+        };
+    }
+}
+
+
+message RateListRequest {
+
+}
+
+message RateListResponse {
+    bytes msg=1;
+}
+
+message RateUpdateRequest {
+    bytes msg=1;
+}
+
+message RateUpdateResponse {
+    bytes msg=1;
+}
+
+service SnapshotAdmin {
+    rpc CreateSnapshotMeta(SnapshotRequeest) returns (SnapshotResponse) {
+         option (google.api.http) = {
+            post: "/vdlserver/snapshot/create_meta"
+            body: "*"
+        };
+    }
+}
+
+message SnapshotRequeest{
+    string raft_group =1;
+}
+
+message SnapshotResponse{
+    string result_status =1;
+    bytes msg=2;
+}
+
+service DevTool {
+    // Enable or Disable debug
+    rpc DebugSwitch(DebugSwitchRequest) returns (DebugSwitchResponse) {
+        option (google.api.http) = {
+        post: "/vdlserver/devtool/debug"
+        body: "*"
+    };
+    }
+}
+
+message DebugSwitchRequest{
+    uint64 switch = 1;
+}
+
+message DebugSwitchResponse{
+    string result_status =1;
+    string error_msg=2;
+}
+
+message DeleteFileRequest{
+    string logstream_name = 1;
+    repeated string segment_files = 2;
+}
+
+message GetDeletePermissionReq{
+    string logstream_name = 1;
+}
+
+message GetDeletePermissionResp{
+    string result_status = 1;
+}
+
+message SetDeletePermissionReq{
+    string logstream_name = 1;
+    uint64 switch = 2;
+}
+
+message SetDeletePermissionResp{
+    string result_status = 1;
+    string error_msg=2;
+}
+
+message DeleteFileResponse{
+    string result_status =1;
+    string error_msg=2;
+}
+
+message LogStreamLeaderTransferRequeset {
+
+    string logstream_name = 1;
+
+    // which transfer to
+    uint64 transferee = 2;
+}
+
+message LogStreamLeaderTransferResponse {
+
+    ResponseHeader header = 1;
+}
+
+message LogStreamStartRequest {
+    // which raft group member to start
+    string logstream_name = 1;
+}
+
+message LogStreamStartResponse {
+
+    ResponseHeader header = 1;
+}
+
+message LogStreamStopRequest {
+    // which raft group member to stop
+    string logstream_name = 1;
+}
+
+message LogStreamStopResponse {
+
+    ResponseHeader header = 1;
+}
+
+message LogStreamDeleteRequest {
+    // which raft group member to delete
+    string logstream_name = 1;
+}
+
+message LogStreamDeleteResponse {
+
+    ResponseHeader header = 1;
+}
+
+message MemberAddRequest {
+
+    // which raft group member add to
+    string logstream_name = 1;
+
+    // which server will be add to
+    string server_name = 2;
+
+    // peerURLs is the list of URLs the added member will use to communicate with the cluster.
+    repeated string peerURLs = 3;
+}
+
+message MemberAddResponse {
+
+    ResponseHeader header = 1;
+    // member is the member information for the added member.
+    Member member = 2;
+    // members is a list of all members after adding the new member.
+    repeated Member members = 3;
+}
+
+message MemberRemoveRequest {
+
+    // which raft group member add to
+    string logstream_name = 1;
+
+    // ID is the member ID of the member to remove.
+    uint64 ID = 2;
+}
+
+message MemberRemoveResponse {
+    ResponseHeader header = 1;
+    // members is a list of all members after removing the member.
+    repeated Member members = 2;
+}
+
+message MemberUpdateRequest {
+
+    // which raft group member(log stream) add to
+    string logstream_name = 1;
+
+    // ID is the member ID of the member to update.
+    uint64 ID = 2;
+
+    // peerURLs is the new list of URLs the member will use to communicate with the cluster.
+    repeated string peerURLs = 3;
+}
+
+message MemberUpdateResponse{
+    ResponseHeader header = 1;
+    // members is a list of all members after updating the member.
+    repeated Member members = 2;
+}
+
+message MemberListRequest {
+
+    // which raft group member add to
+    string logstream_name = 1;
+}
+
+message MemberListResponse {
+
+    ResponseHeader header = 1;
+
+    // cluster leader id, 0 if no leader
+    uint64 leader = 2;
+
+    // members is a list of all members associated with the cluster.
+    repeated Member members = 3;
+
+    // list all remove members
+    repeated uint64 removed_members = 4;
+}
+
+message ResponseHeader {
+
+    // logstream_name which operator for.
+    string logstream_name = 1;
+
+    // cluster id which log stream in
+    uint64 cluster_id = 2;
+
+    // server name which send the response
+    string server_name = 3;
+
+}
+
+message Member {
+    // ID is the member ID for this member.
+    uint64 ID = 1;
+    // name is the human-readable name of the member. If the member is not started, the name will be an empty string.
+    string name = 2;
+    // peerURLs is the list of URLs the member exposes to the cluster for communication.
+    repeated string peerURLs = 3;
+
+}

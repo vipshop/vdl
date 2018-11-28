@@ -1,0 +1,92 @@
+# This is the configuration file for the vdl server.
+
+# Human-readable name for vdl server.
+name: 'vdl0'
+
+# Path to the stable store directory (rocksdb path).
+stable-dir: /apps/vdl/data0
+
+# metrics log file path
+metrics-dir: /apps/vdl/metrics
+# duration for write log, seconds
+metrics-report-duration: 1
+# how log will the log reserved, after the hours will be delete
+metrics-log-reserved-hour: 24
+
+# Client URL to listen on for client traffic (TCP)
+listen-client-url: 127.0.0.1:8000
+
+# Metrics URL to expose VDL metrics information. (must include http://)
+listen-metrics-url: http://localhost:8100
+
+# listen on for admin traffic. (must include http://)
+listen-admin-url: http://localhost:9000
+
+# Time (in milliseconds) of a heartbeat interval.
+heartbeat-interval: 100
+
+# Time (in milliseconds) for an election to timeout.
+election-timeout: 2000
+# Idle connections timeout(ms): the server socket processor threads close the connections that idle more than this
+connections-max-idle: 600000
+# List of comma separated initial log stream configuration for bootstrapping.
+# log stream name should match [a-zA-Z0-9_:]+
+initial-logstream: logstream1
+
+# Use for initial-logstream, all log stream should be specified
+logstream1-initial-cluster: vdl0=http://127.0.0.1:2380,vdl1=http://127.0.0.1:2381,vdl2=http://127.0.0.1:2382
+
+# Initial cluster state ('new' or 'existing').
+logstream1-initial-cluster-state: new
+
+# List of comma separated admin urls for exists cluster, use for initial-cluster-state = existing
+# this will use in add new member to exists cluster, can be empty when initial-cluster-state is new
+logstream1-existing-admin-urls:
+
+# diff for each log stream.
+logstream1-listen-peer-url: http://127.0.0.1:2380
+
+# If true, Raft runs an additional election phase
+# to check whether it would get enough votes to win
+# an election, thus minimizing disruptions.
+logstream1-prevote: false
+
+# data dir for log stream
+logstream1-log-dir: /temp/data/vdl0
+
+# the max size per msg for log stream, byte
+logstream1-maxsize-per-msg: 1048576
+
+#the logstore resever segment count,must large than 4
+logstream1-reserve-segment-count: 50
+
+#the logstore memcache size,must large than 512MB
+#unit:MB
+logstream1-memcache-size: 512
+
+# max size once raft send append entries (per request)
+# Assuming the RTT is around 1ms, 512k max size is large enough.
+# means: follower can received up to 512M data per second ( 512 * 1000 = 512M )
+# when cross region or IDC, can increase this size to increase thoughput
+logstream1-max-size-per-append-entries: 524288
+
+# the inflight number for append entries request
+# NOTE: max-inflight-append-entries-request * max-size-per-append-entries <= log store segment max size / 2 (default: 512M/2=256M)
+logstream1-max-inflight-append-entries-request: 256
+
+# strict check when member changes, value should be true|false
+logstream1-strict-member-changes-check: true
+
+# Enable debug-level logging for vdl.
+# TODO.
+#debug: false
+#the vdl log dir,INFO|WARING|ERROR|FATAL(DEBUG<INFO<WARING<ERROR<FATAL)
+glog-dir: /apps/logs/vdl0
+#output debug log
+debug: false
+
+#alarm script path
+alarm-script-path: /apps/alarm/alarm.sh
+# Specify a particular log level for each vdl package (eg: 'vdlmain=CRITICAL,logstream=DEBUG'.
+# TODO.
+#log-package-levels:

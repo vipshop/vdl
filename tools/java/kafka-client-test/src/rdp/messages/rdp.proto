@@ -1,0 +1,145 @@
+syntax = "proto2";
+
+package rdp.messages;
+
+option java_package = "rdp.messages";
+option java_outer_classname = "RDPProbuf";
+
+enum DDL {
+  kDDLNoChage = 0;  // DDL没有变更
+  kDDLChanged = 1;  // DDL变更
+}
+
+/*
+defined in ./libbinlogevents/export/binary_log_types.h
+
+enum enum_field_types {
+MYSQL_TYPE_DECIMAL, MYSQL_TYPE_TINY,
+MYSQL_TYPE_SHORT,  MYSQL_TYPE_LONG,
+MYSQL_TYPE_FLOAT,  MYSQL_TYPE_DOUBLE,
+MYSQL_TYPE_NULL,   MYSQL_TYPE_TIMESTAMP,
+MYSQL_TYPE_LONGLONG,MYSQL_TYPE_INT24,
+MYSQL_TYPE_DATE,   MYSQL_TYPE_TIME,
+MYSQL_TYPE_DATETIME, MYSQL_TYPE_YEAR,
+MYSQL_TYPE_NEWDATE, MYSQL_TYPE_VARCHAR,
+MYSQL_TYPE_BIT,
+MYSQL_TYPE_TIMESTAMP2,
+MYSQL_TYPE_DATETIME2,
+MYSQL_TYPE_TIME2,
+MYSQL_TYPE_JSON=245,
+MYSQL_TYPE_NEWDECIMAL=246,
+MYSQL_TYPE_ENUM=247,
+MYSQL_TYPE_SET=248,
+MYSQL_TYPE_TINY_BLOB=249,
+MYSQL_TYPE_MEDIUM_BLOB=250,
+MYSQL_TYPE_LONG_BLOB=251,
+MYSQL_TYPE_BLOB=252,
+MYSQL_TYPE_VAR_STRING=253,
+MYSQL_TYPE_STRING=254,
+MYSQL_TYPE_GEOMETRY=255
+} enum_field_types;
+*/
+
+// Column
+message Column {
+  // column 名称
+  required bytes name = 1;
+  // column 类型：int32 varcher blob等，参见：enum_field_types
+  required bytes type = 2;
+  // column 内容
+  required bytes value = 3;
+}
+
+message Row {
+  // Insert、Delete情况下，只有before
+  repeated Column before = 14;
+  // Update情况下，before和after成对出现
+  repeated Column after = 15;
+}
+
+message Event {
+  optional bytes database_name = 1;
+  optional bytes table_name = 2;
+  required uint32 event_type = 3;
+  optional uint64 schema_id = 4;
+  //数据库的binlog时间
+  required uint64 timestamp = 5;
+  // rdp处理binlog的时间
+  required uint64 timestamp_of_receipt = 6;
+  //是否发生ddl变更
+  optional DDL ddl = 7;
+  //在binlog文件中的位置
+  optional uint64 position = 8;
+  //下一条binlog的位置
+  optional uint64 next_position = 9;
+  // binlog文件名
+  optional bytes binlog_file_name = 10;
+  // ServerId Long mysql 实例的唯一性ID
+  optional uint64 server_id = 12;
+  // sqlStatement String 表结构发生变化时的SQL
+  optional bytes sql_statement = 13;
+  repeated Row rows = 14;
+  // Event原始的二进制流
+  optional bytes orig_buff = 15;
+}
+
+// mysql Transaction 数据
+message Transaction {
+  required bytes gtid = 1;
+  // 一个Gtid范围内，有过多的event时，导致拆包的序列号，从0、1、2...
+  required uint32 seq = 2;
+  repeated Event events = 3;
+  //在binlog文件中的位置
+  required uint64 position = 4;
+  // binlog文件名
+  required bytes binlog_file_name = 5;
+  //下一条binlog的位置
+  required uint64 next_position = 6;
+  // binlog文件名
+  required bytes next_binlog_file_name = 7;
+}
+
+//写入kafka数据
+message KafkaPkg {
+  // kafka 数据版本号
+  required uint64 epoch = 1;
+  // 事务序号
+  required uint64 trans_seq_no = 2;
+  // 事务GTID
+  required bytes gtid = 3;
+  // 分包标识
+  // 0: 独立数据，没有分包操作
+  // 1: 分包数据，非最后分包
+  // 2: 分包数据，最后分包
+  required int32 split_flag = 4;
+  // 分包序号
+  required uint64 seq_no = 5;
+  // 数据
+  required bytes data = 6;
+  // Transaction数据校验值
+  // 在分包标识为0或者2的时候才存在
+  optional int64 checksum = 7;
+}
+
+
+/***************VMS Protobuf*********************/
+message KeyPair {
+  required string key = 1;
+  required string value = 2;
+}
+
+message VMSMessage {
+  optional string messageId = 1;
+  optional uint64 weight = 2;
+  optional uint64 ttl = 3;
+  repeated string routingKeys = 4;
+  repeated KeyPair properties = 5;
+  required bytes payload = 6;
+
+}
+
+message VIPProperties {
+  required string version = 1;
+  repeated KeyPair properties = 2;
+}
+/************************************************/
