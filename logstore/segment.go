@@ -36,7 +36,7 @@ import (
 	"github.com/vipshop/vdl/pkg/glog"
 	"github.com/vipshop/vdl/pkg/myos"
 	"github.com/vipshop/vdl/vdlfiu"
-	"gitlab.tools.vipshop.com/distributedstorage/fiu"
+	"vipshop.com/distributedstorage/fiu"
 )
 
 var Encoding = binary.BigEndian

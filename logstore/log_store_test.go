@@ -29,7 +29,7 @@ import (
 	"math"
 
 	"github.com/vipshop/vdl/consensus/raft/raftpb"
-	"gitlab.tools.vipshop.com/distributedstorage/fiu"
+	"vipshop.com/distributedstorage/fiu"
 )
 
 func init() {

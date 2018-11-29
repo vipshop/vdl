@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/vipshop/vdl/pkg/types"
-	"gitlab.tools.vipshop.com/distributedstorage/fiu"
+	"vipshop.com/distributedstorage/fiu"
 )
 
 const testLetterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

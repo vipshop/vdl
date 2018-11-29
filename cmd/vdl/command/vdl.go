@@ -31,7 +31,7 @@ import (
 	"github.com/vipshop/vdl/pkg/types"
 	"github.com/vipshop/vdl/server"
 	"github.com/vipshop/vdl/server/metricsserver"
-	"gitlab.tools.vipshop.com/distributedstorage/fiu"
+	"vipshop.com/distributedstorage/fiu"
 )
 
 func NewStartCommand() *cobra.Command {
