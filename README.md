@@ -50,10 +50,10 @@ VDL(Vip Distributed Log)的定位是：高吞吐、低延时的分布式日志�
 
 VDL由唯品会基础架构部-数据与中间件组开发和维护。开发成员如下：
 
-- [范力彪](https://github.com/libiaofan)
 - [陈非](https://github.com/flike)
 - [汤锦平](https://github.com/tom-tangjp)
 - [赵百忠](https://github.com/firnsan)
+- [范力彪](https://github.com/libiaofan)
 - 龙永超
 - 简怀兵
 
