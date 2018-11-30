@@ -1,3 +1,6 @@
+# VDL
+VDL(Vip Distributed Log)的是一款基于Raft一致性算法的高吞吐、低延时的分布式日志存储系统。
+
 ## 1.简介
 
 VDL(Vip Distributed Log)的定位是：高吞吐、低延时的分布式日志存储，多副本、强一致性是其关键的特征。
@@ -59,11 +62,11 @@ VDL由唯品会基础架构部-数据与中间件组开发和维护。开发成�
 
 ## 5.鸣谢
 
-- 感谢**[etcd](https://github.com/etcd-io/etcd)**，VDL的Raft协议实现使用了[etcd](https://github.com/etcd-io/etcd)的raft库。
+- 感谢[etcd](https://github.com/etcd-io/etcd)，VDL的Raft协议实现使用了[etcd](https://github.com/etcd-io/etcd)的raft库。
 
-- 感谢**[jocko](https://github.com/travisjeffery/jocko)**，VDL使用了jocko解析kafka协议。
+- 感谢[jocko](https://github.com/travisjeffery/jocko)，VDL使用了jocko解析kafka协议。
 
 
 ## 6.License
 
-VDL 开源协议遵循Apache 2.0 license.详见LICENSE文件。
+VDL 开源协议遵循Apache 2.0 license.详见[LICENSE](./LICENSE)文件。
