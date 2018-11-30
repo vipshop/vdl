@@ -25,12 +25,12 @@ GOPATH=/home/apps/flike/go_code
 2. 下载vdl源码到指定目录 
 
 ```
-git clone git@gitlab.tools.vipshop.com:distributedstorage/ds-vdl.git /home/apps/flike/go_code/src/gitlab.tools.vipshop.com/distributedstorage/ds-vdl
+git clone https://github.com/vipshop/vdl.git /home/apps/flike/go_code/src/vipshop/vdl
 ```
 3. 编译vdl 
 
 ```
-cd /home/apps/flike/go_code/src/gitlab.tools.vipshop.com/distributedstorage/ds-vdl 
+cd /home/apps/flike/go_code/src/vipshop/vdl
 make
 ```
 
@@ -116,30 +116,22 @@ alarm-script-path: /home/apps/fiu_vdl/alarm/alarm.sh
 5.启动vdl
 
 ```
-cd /home/apps/yclong/go/src/gitlab.tools.vipshop.com/distributedstorage/ds-vdl
+cd /home/apps/flike/go_code/src/vipshop/vdl
 nohup ./bin/vdl start -f /home/apps/flike/vdl/config/vdl.conf.yml 2>/home/apps/flike/vdl/log/stderr.txt &
 ```
 
 ### 2.2 安装和配置filebeat
 
-1. 下载源码
+1. 编译安装
 
 ```
-git clone git@gitlab.tools.vipshop.com:ds-vdl/beats.git /home/apps/flike/go_code/src/github.com/elastic/beats
-```
-
-
-2. 编译安装
-
-```
-cd /home/apps/flike/go_code/src/github.com/elastic/beats/filebeat
-go build
+cd /home/apps/flike/go_code/src/vipshop/tools/filebeat
 
 ```
 
 将生成的filebeat可执行文件，放在/home/apps/flike/vdl/filebeat目录 
 
-3. 设置配置文件 
+2. 设置配置文件 
 在/home/apps/flike/vdl/filebeat目录下设置配置文件(filebeat.yml)，内容参考如下:
 
 ```
@@ -281,17 +273,17 @@ time_precision: 'ms'
 
 ```
 
-4.运行filebeat
+3.运行filebeat
 
 ```
 cd /home/apps/flike/vdl/filebeat
 nohup ./filebeat -e -c filebeat.yml >/home/apps/flike/vdl/filebeat/filebeat.log 2>&1 &
 ```
 
-### 3.配置influxdb和grafana
+### 4.配置influxdb和grafana
 由于vdl是对接已有的influxdb和grafana，这里就不再讲述如何搭建两个组件，只描述如何对接这两个组件
 
-#### 3.1在influxdb中创建数据库并配置数据过期时间
+#### 4.1在influxdb中创建数据库并配置数据过期时间
 influx默认会永久保存写入的metrics，这会导致磁盘满问题，所以在创建数据库时，需要设置数据的过期时间(4 weeks)，命令如下所示：
 
 ```
@@ -301,7 +293,7 @@ influx默认会永久保存写入的metrics，这会导致磁盘满问题，所�
 > ALTER RETENTION POLICY default ON vdl_binlog_test DURATION 4w REPLICATION 1 DEFAULT
 ```
 
-#### 3.2配置grafana
+#### 4.2配置grafana
 配置grafana过程基本都是操作UI界面，主要过程包括： 
 1.创建一个Data Sources。（可以参考已有数据源） 
 2.创建一个dashboard。 
