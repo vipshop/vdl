@@ -1,0 +1,58 @@
+# This is the configuration file for the vdl server.
+
+# Human-readable name for vdl server.
+name: 'fiu90'
+
+# Path to the stable store directory (rocksdb path).
+stable-dir: /home/apps/fiu_vdl/bolt
+# metrics log file path
+metrics-dir: /home/apps/fiu_vdl/metrics
+# Client URL to listen on for client traffic (TCP)
+listen-client-url: 192.168.0.90:8200
+
+# Metrics URL to expose VDL metrics information (must include http://)
+listen-metrics-url: http://192.168.0.90:8300
+
+# admin traffic URL to VDL management.(must include http://)
+listen-admin-url: http://192.168.0.90:8500
+
+# Time (in milliseconds) of a heartbeat interval.
+heartbeat-interval: 100
+# Time (in milliseconds) for an election to timeout.
+election-timeout: 2000
+# Idle connections timeout(ms): the server socket processor threads close the connections that idle more than this
+connections-max-idle: 600000
+# List of comma separated initial log stream configuration for bootstrapping.
+initial-logstream: fiutopic
+fiutopic-snapshot-meta-dir: /home/apps/fiu_vdl/snap_meta
+# Use for initial-logstream, all log stream should be specified
+fiutopic-initial-cluster: fiu90=http://192.168.0.90:2490,fiu91=http://192.168.0.91:2490,fiu92=http://192.168.0.92:2490
+# Initial cluster state ('new' or 'existing').
+fiutopic-initial-cluster-state: new
+fiutopic-strict-member-changes-check: true 
+# List of comma separated admin urls for exists cluster, use for initial-cluster-state = existing
+# this will use in add new member to exists cluster, can be empty when initial-cluster-state is new
+fiutopic-existing-admin-urls:
+#the logstore resever segment count,must large than 4
+fiutopic-reserve-segment-count: 5
+
+# If true, Raft runs an additional election phase
+# to check whether it would get enough votes to win
+# an election, thus minimizing disruptions.
+fiutopic-prevote: true
+
+#the logstore memcache size,must large than 512MB
+#unit:MB
+fiutopic-memcache-size: 1024
+# diff for each log stream.
+fiutopic-listen-peer-url: http://192.168.0.90:2490
+
+# data dir for log stream
+fiutopic-log-dir: /home/apps/fiu_vdl/data
+
+glog-dir: /home/apps/fiu_vdl/log 
+#output debug log
+debug: false
+
+#alarm script path
+alarm-script-path: /home/apps/fiu_vdl/alarm/alarm.sh

@@ -1,0 +1,24 @@
+
+
+message KeyPair
+{
+	required string key=1;
+	required string value=2;
+}
+
+message VMSMessage
+{
+	optional string messageId=1;
+	optional uint64 weight=2;
+	optional uint64 ttl=3;
+	repeated string routingKeys=4;
+    repeated KeyPair properties=5;
+	required bytes payload=6;
+	
+}
+
+message VIPProperties
+{
+	required string version=1;
+ 	repeated KeyPair properties=2;
+}
